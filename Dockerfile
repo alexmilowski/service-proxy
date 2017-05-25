@@ -11,7 +11,8 @@ COPY proxy.py /proxy.py
 COPY $conf /proxy.conf
 
 ENV WEB_CONF "/proxy.conf"
-ENV GUNICORN_WORKERS "4"
+ENV GUNICORN_WORKERS "8"
+ENV GUNICORN_TIMEOUT "180"
 
 EXPOSE 5000
 
