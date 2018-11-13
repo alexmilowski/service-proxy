@@ -35,22 +35,32 @@ gunicorn --config gunicorn.conf --log-config logging.conf -b ":5000" main:app
 
 ## Running in a Docker Container
 
-There is a docker file for building an image for running the service.  Just create your configuration file (e.g., "myservice.conf") and then build the image:
+There is a docker file for building an image for running the service.  The
+configuration is expected to be in the /conf directory and logs are recorded
+in the /logs directory.
+
+You can use the public image alexmilowski/service-proxy:2018-11-13 or build
+one yourself:
 
 ```
-docker build -t myservice --build-arg conf=myservice.conf .
+docker build -t service-proxy .
 ```
 
-The image uses a '/logs' directory for the service access and error logs. You'll want to map that to local filesystem.  Otherwise, the image is easy to run:
+Adjust the configuration parameters in `conf/proxy.conf` and then run the
+container of choice:
+
 
 ```
-docker run -v `pwd`/logs:/logs -p :5000:5000 myservice
+mkdir logs
+docker run -v `pwd`/logs:/logs -v `pwd`/conf:/conf -p :5000:5000 service-proxy
 ```
 
 ## Notes
 
 Keep in mind that the service will respond to the host name you put into your configuration. If
-you specify "`localhost`", it will only respond properly locally.  The service is based on Flask and you can read more about the configuration there as well.
+you specify "`localhost`", it will only respond properly locally.  The service
+is based on Flask and you can read more about the configuration there as well.
 
-Similarly, `gunicorn` has many configuration properties.  Any environment variable prefixed with `GUNICORN_` will be mapped in the `gunicorn.conf`.  Specifically, you can control the
-number of workers with `GUNICORN_WORKERS`.
+Similarly, `gunicorn` has many configuration properties.  Any environment
+variable prefixed with `GUNICORN_` will be mapped in the `gunicorn.conf`.  
+Specifically, you can control the number of workers with `GUNICORN_WORKERS`.
