@@ -1,4 +1,4 @@
-FROM python:3.5
+FROM python:3.7
 ARG conf
 
 MAINTAINER Alex Miłowski <alex@milowski.com>
@@ -8,9 +8,10 @@ COPY logging.conf /logging.conf
 COPY gunicorn.conf /gunicorn.conf
 COPY main.py /main.py
 COPY proxy.py /proxy.py
-COPY $conf /proxy.conf
+COPY fixhtml.py /fixhtml.py
+RUN mkdir /conf /logs; touch /conf/proxy.conf
 
-ENV WEB_CONF "/proxy.conf"
+ENV WEB_CONF "/conf/proxy.conf"
 ENV GUNICORN_WORKERS "8"
 ENV GUNICORN_TIMEOUT "180"
 
